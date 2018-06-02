@@ -1,0 +1,29 @@
+git:
+  depth: 3
+
+language: node_js
+
+cache:
+  yarn: true
+  directories:
+    - $HOME/.npm
+    - node_modules
+    - .cache
+
+node_js:
+ - "10"
+install: yarn
+script: yarn build
+deploy:
+  provider: pages
+  skip-cleanup: true
+  github-token: $GITHUB_TOKEN
+  committer-from-gh: true
+  keep-history: true
+  repo: pakeweb/pakeweb.github.io
+  target-branch: master
+  local-dir: public
+  on:
+    branch: master
+notifications:
+  email: false
