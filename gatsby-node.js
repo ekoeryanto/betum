@@ -84,8 +84,8 @@ exports.onCreateNode = ({ node, boundActionCreators, getNode }) => {
   }
 }
 
-// exports.modifyWebpackConfig = ({config}) => config.merge({
-//   module: {
-//     noParse: [/netlify-cms/]
-//   }
-// });
+exports.modifyWebpackConfig = ({config}) => config.merge({
+  module: {
+    noParse: [/netlify-cms/, /netlify-identity-widget/]
+  }
+});
