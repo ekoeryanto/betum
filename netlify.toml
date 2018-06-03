@@ -1,12 +1,9 @@
 [build]
   publish = "public"
   command = '''
-ls -al $NETLIFY_CACHE_DIR
-echo xxxxx $NETLIFY_CACHE_DIR xxxxx
-GATCACHE="/opt/buildhome/cache/gatsby-cache"
-[ -d "$GATCACHE" ] && ln -d $GATCACHE ./cache
-yarn gatsby build && cp -TRv ./cache $GATCACHE
-'''
+  ls -al $NETLIFY_CACHE_DIR
+  yarn gatsby build
+  '''
 [build.environment]
   NODE_VERSION = "10"
   YARN_VERSION = "1.7.0"
