@@ -1,6 +1,8 @@
 [build]
   publish = "public"
   command = '''
+ls $NETLIFY_CACHE_DIR
+echo $NETLIFY_CACHE_DIR
 GATCACHE="/opt/buildhome/cache/gatsby-cache"
 [ -d "$GATCACHE" ] && ln -d $GATCACHE ./cache
 yarn gatsby build && cp -TRv ./cache $GATCACHE
