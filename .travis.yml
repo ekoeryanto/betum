@@ -11,7 +11,7 @@ cache:
     - .cache
 
 node_js:
- - "10"
+ - "8"
 install: yarn
 script: yarn build
 deploy:
