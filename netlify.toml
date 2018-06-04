@@ -1,12 +1,6 @@
 [build]
   publish = "public"
-  command = '''
-  ls -al $NETLIFY_CACHE_DIR
-  ls -al $NETLIFY_CACHE_DIR/.cache
-  yarn gatsby build
-  ls -al $NETLIFY_CACHE_DIR
-  ls -al $NETLIFY_CACHE_DIR/.cache  
-  '''
+  command = "yarn gatsby build"
 [build.environment]
   NODE_VERSION = "10"
   YARN_VERSION = "1.7.0"
