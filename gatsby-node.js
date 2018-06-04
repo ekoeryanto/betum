@@ -1,5 +1,6 @@
 const _ = require('lodash')
-const path = require('path')
+const { resolve } = require(`path`)
+const { ensureDir, readdir, copy } = require(`fs-extra`)
 const { createFilePath } = require('gatsby-source-filesystem')
 
 exports.createPages = ({ boundActionCreators, graphql }) => {
@@ -35,7 +36,7 @@ exports.createPages = ({ boundActionCreators, graphql }) => {
       createPage({
         path: edge.node.fields.slug,
         tags: edge.node.frontmatter.tags,
-        component: path.resolve(
+        component: resolve(
           `src/templates/${String(edge.node.frontmatter.templateKey)}.js`
         ),
         // additional data can be passed via context
@@ -62,7 +63,7 @@ exports.createPages = ({ boundActionCreators, graphql }) => {
 
       createPage({
         path: tagPath,
-        component: path.resolve(`src/templates/tags.js`),
+        component: resolve(`src/templates/tags.js`),
         context: {
           tag,
         },
@@ -84,3 +85,55 @@ exports.onCreateNode = ({ node, boundActionCreators, getNode }) => {
   }
 }
 
+
+exports.onPreBootstrap = async function({
+  store,
+}) {
+  const { staticDir, cacheDir } = calculateDirs(store)
+
+  console.log(`Ensuring existance of cache and gatsby public/static directory`)
+  await ensureDir(cacheDir)
+  await ensureDir(staticDir)
+
+  const cacheFiles = await readdir(cacheDir)
+  console.log(`Found ${cacheFiles.length} files in cache directory`)
+
+  const staticFiles = await readdir(staticDir)
+  console.log(`Found ${staticFiles.length} files in public/static directory`)
+
+  await copy(cacheDir, staticDir, {
+    overwrite: false,
+  })
+  console.log(`Refilled gatsby cache if neccessary`)
+}
+
+exports.onPostBuild = async function({
+  store,
+}) {
+  const { staticDir, cacheDir } = calculateDirs(store)
+
+  const cacheFiles = await readdir(cacheDir)
+  console.log(`Found ${cacheFiles.length} files in cache directory`)
+
+  const staticFiles = await readdir(staticDir)
+  console.log(`Found ${staticFiles.length} files in public/static directory`)
+
+  await copy(staticDir, cacheDir, {
+    overwrite: false,
+  })
+  console.log(`Restored gatsby cache`)
+}
+
+function calculateDirs (store) {
+  const program = store.getState().program
+
+  const staticDir = resolve(program.directory, `public`, `static`)
+  const cacheDir = process.env.NETLIFY_BUILD_BASE
+    ? resolve(process.env.NETLIFY_BUILD_BASE, `cache`, `.gatsby-static-files`)
+    : resolve(program.directory, `.gatsby-static-files`)
+
+  return {
+    staticDir,
+    cacheDir,
+  }
+}
