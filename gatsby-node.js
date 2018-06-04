@@ -127,6 +127,8 @@ exports.onPostBuild = async function({
 function calculateDirs (store) {
   const program = store.getState().program
 
+  console.log(`NETLIFY_BUILD_BASE`, process.env.NETLIFY_BUILD_BASE)
+  console.log(`NETLIFY_CACHE_DIR:`, process.env.NETLIFY_CACHE_DIR)
   const staticDir = resolve(program.directory, `public`, `static`)
   const cacheDir = process.env.NETLIFY_BUILD_BASE
     ? resolve(process.env.NETLIFY_BUILD_BASE, `cache`, `.gatsby-static-files`)
