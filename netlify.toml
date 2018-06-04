@@ -1,10 +1,6 @@
 [build]
   publish = "public"
-  command = '''
-GATCACHE="/opt/build/cache/gatsby-cache"
-[ -d "$GATCACHE" ] && ln -d $GATCACHE ./cache
-yarn gatsby build && cp -TRv ./cache $GATCACHE
-'''
+  command = "npm run build"
 [build.environment]
   NODE_VERSION = "10"
   YARN_VERSION = "1.7.0"
